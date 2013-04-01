@@ -3,13 +3,10 @@ class rss {
 	$db_user     = "ttrss"
 	$db_password = "ttrss"
 	$ttrss_dir = "/var/www/ttrss"
- 	
-	notify {"tt-rss installation verified":} <-
 	
 	exec { "apt-update":
     		command => "/usr/bin/apt-get update",
 		refreshonly => true,
-
 	}
 	Exec["apt-update"] ~> Package <| |>
 
