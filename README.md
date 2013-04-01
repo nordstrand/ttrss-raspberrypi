@@ -5,7 +5,7 @@ The low-cost energy efficient [Raspberry Pi](http://www.raspberrypi.org/) is a i
 
 To get everything working requires quite a few manual steps: installation, database setup, cronjob etc.
 
-This projects automates all this with the help of Puppet setting up tt-rss to use the PostgreSQL RDBMS and the ligthweight [lighttpd](http://www.lighttpd.net/) web server.
+This projects automates all this with the help of Puppet setting up tt-rss to use the PostgreSQL RDBMS and the ligth weight [lighttpd](http://www.lighttpd.net/) web server.
 
 ## Usage
 1. $ apt-get -y update && apt-get -y install puppet git
@@ -15,4 +15,4 @@ This projects automates all this with the help of Puppet setting up tt-rss to us
 5. Grab a cup of coffee (puppet run will consume about ~20 minutes depending on network and SD-card performance)
 6. Visit [http://raspberrypi.local/ttrs](http://raspberrypi.local/ttrs)
 
-(Install has been verified on Raspbian, but will probably work on other distribution and on non-rasberry platforms too).
+(Install has been verified on [http://www.raspbian.org/](Raspbian), but will probably work on other distributions and on non-rasberry platforms too).
