@@ -114,10 +114,10 @@ class rss {
 
         cron { "update feeds":
   		command => "cd $ttrss_dir && /usr/bin/php $ttrss_dir/update.php --feeds >/dev/null 2>&1",
-  		user    => root,
+  		user    => www-data,
   		minute  => 30,
                 ensure  => present,
-                require => Exec["mv ttrss"],
+ 		require => [Exec["mv ttrss"],Package["lighttpd"]],  
 	}
     
    	file { '/var/www/index.html':
