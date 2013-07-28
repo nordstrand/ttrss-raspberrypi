@@ -9,7 +9,7 @@ This projects automates all this with the help of Puppet setting up tt-rss to us
 
 ## Usage
 1. $ apt-get -y update && apt-get -y install puppet git
-2. $ git clone https://github.com/nordstrand/ttrss-raspberrypi
+2. $ GIT_SSL_NO_VERIFY=true git clone https://github.com/nordstrand/ttrss-raspberrypi
 3. $ cd ttrss-raspberry-pi/
 4. $ puppet apply --modulepath modules/:extmodules/ --verbose  manifests/site.pp
 5. Grab a cup of coffee (puppet run will consume about ~20 minutes depending on network and SD-card performance)
