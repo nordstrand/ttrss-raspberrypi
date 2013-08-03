@@ -118,13 +118,29 @@ class rss {
     }
 
 
-cron { "update feeds":
-    ensure  => present,
-    command => "cd $ttrss_dir && /usr/bin/php $ttrss_dir/update.php --feeds >/dev/null 2>&1",
-    user    => www-data,
-    minute  => 30,
-    require => [Exec["mv ttrss"],Package["lighttpd"]],
- }
+    cron { "update feeds":
+        ensure  => present,
+        command => "cd $ttrss_dir && /usr/bin/php $ttrss_dir/update.php --feeds >/dev/null 2>&1",
+        user    => www-data,
+        minute  => 30,
+        require => [Exec["mv ttrss"],Package["lighttpd"]],
+    }
+
+    file { "/var/ttrss-backup":
+        ensure => "directory",
+        owner  => "root",
+        group  => "root",
+        mode   => "0750",
+    }
+
+    cron { "make backup":
+        ensure  => present,
+        command => "PGPASSWORD=$db_password pg_dump -U $db_user -h localhost $db_name > /var/ttrss-backup/ttrss-dump-`date +%Y-%m-%d`.sql",
+        user    => root,
+        hour    => 1,
+        minute  => 30,
+        require => [Postgresql::Db[$db_name],File["/var/ttrss-backup"]]
+    }
 
     file { '/var/www/index.html':
         ensure  => present,
