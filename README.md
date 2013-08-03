@@ -7,6 +7,8 @@ To get everything working requires quite a few manual steps: installation, datab
 
 This projects automates all this with the help of Puppet setting up tt-rss to use the [PostgreSQL](http://www.postgresql.org/) RDBMS and the ligth weight [lighttpd](http://www.lighttpd.net/) web server.
 
+Feeds will updated periodically and daily backups taken.
+
 ## Usage
 1. $ apt-get -y update && apt-get -y install puppet git
 2. $ GIT_SSL_NO_VERIFY=true git clone https://github.com/nordstrand/ttrss-raspberrypi
