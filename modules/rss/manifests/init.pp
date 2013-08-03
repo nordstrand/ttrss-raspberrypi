@@ -24,12 +24,12 @@ class rss {
     postgresql::db { $db_name:
         user        => $db_user,
         password    => $db_password,
-        notify      => Exec["install ddl"],
     }
 
     exec { "install ddl":
         command     => "psql --username=$db_user --host=localhost  --dbname=$db_name --file=$ttrss_dir/schema/ttrss_schema_pgsql.sql",
         require     => [Postgresql::Db[$db_name],Exec["mv ttrss"]],
+        subscribe   => Exec["mv ttrss"],
         refreshonly => true,
         path        => "/usr/bin:/usr/sbin:/bin",
         environment => "PGPASSWORD=$db_password",
@@ -80,7 +80,7 @@ class rss {
 
     exec {
         "download ttrss":
-        command     => "wget --output-document=/tmp/ttrs.tar.gz https://github.com/gothfox/Tiny-Tiny-RSS/archive/1.7.5.tar.gz",
+        command     => "wget --output-document=/tmp/ttrs.tar.gz https://github.com/gothfox/Tiny-Tiny-RSS/archive/1.9.tar.gz",
         unless      => "test -e $ttrss_dir",
         path        => "/usr/bin:/usr/sbin:/bin",
         require     => Package["wget"],
@@ -103,7 +103,7 @@ class rss {
         path        => "/usr/bin:/usr/sbin:/bin";
         "chmod ttrss":
         require     => Exec['mv ttrss'],
-        command     => 'chmod -R 777 cache/images cache/export cache/js feed-icons lock',
+        command     => 'chmod -R 777 cache/upload cache/images cache/export cache/js feed-icons lock',
         refreshonly => true,
         subscribe   => Exec["mv ttrss"],
         cwd         => $ttrss_dir,

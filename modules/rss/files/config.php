@@ -24,6 +24,13 @@
 	// You need to set this option correctly otherwise several features
 	// including PUSH, bookmarklets and browser integration will not work properly.
 
+	define('FEED_CRYPT_KEY', '');
+	// Key used for encryption of passwords for password-protected feeds
+	// in the database. A string of 24 random characters. If left blank, encryption
+	// is not used. Requires mcrypt functions.
+	// Warning: changing this key will make your stored feed passwords impossible
+	// to decrypt.
+	
 	define('SINGLE_USER_MODE', true);
 	// Operate in single user mode, disables all functionality related to
 	// multiple users.
@@ -100,7 +107,10 @@
 	// Enable fulltext search using Sphinx (http://www.sphinxsearch.com)
 	// Please see http://tt-rss.org/wiki/SphinxSearch for more information.
 
-	define('SPHINX_INDEX', 'ttrss');
+	define('SPHINX_SERVER', 'localhost:9312');
+	// Hostname:port combination for the Sphinx server.
+
+	define('SPHINX_INDEX', 'ttrss, delta');
 	// Index name in Sphinx configuration. You can specify multiple indexes
 	// as a comma-separated string.
 
@@ -154,17 +164,19 @@
 	define('DIGEST_SUBJECT', '[tt-rss] New headlines for last 24 hours');
 	// Subject line for email digests
 
-	define('SMTP_HOST', '');
-	// SMTP Host to send outgoing mail. Blank - use system MTA.
+	define('SMTP_SERVER', '');
+	// Hostname:port combination to send outgoing mail (i.e. localhost:25). 
+	// Blank - use system MTA.
 	
-	define('SMTP_PORT','');
-	// SMTP port to sent outgoing mail. Default is 25.
-
 	define('SMTP_LOGIN', '');
 	define('SMTP_PASSWORD', '');
 	// These two options enable SMTP authentication when sending
-	// outgoing mail. Only used with SMTP_HOST
+	// outgoing mail. Only used with SMTP_SERVER.
 
+	define('SMTP_SECURE', '');
+	// Used to select a secure SMTP connection. Allowed values: ssl, tls,
+	// or empty.
+	
 	// ***************************************
 	// *** Other settings (less important) ***
 	// ***************************************
@@ -179,12 +191,20 @@
 	// if you experience weird errors and tt-rss failing to start, blank pages
 	// after login, or content encoding errors, disable it.
 
-	define('PLUGINS', 'auth_remote, auth_internal, note');
+	define('PLUGINS', 'auth_internal, note, updater');
 	// Comma-separated list of plugins to load automatically for all users.
 	// System plugins have to be specified here. Please enable at least one
 	// authentication plugin here (auth_*).
 	// Users may enable other user plugins from Preferences/Plugins but may not
 	// disable plugins specified in this list.
+	// Disabling auth_internal in this list would automatically disable
+	// reset password link on the login form.
+	
+	define('LOG_DESTINATION', 'sql');
+	// Log destination to use. Possible values: sql (uses internal logging
+	// you can read in Preferences -> System), syslog - logs to system log.
+	// Setting this to blank uses PHP logging (usually to http server 
+	// error.log).
 
 	define('CONFIG_VERSION', 26);
 	// Expected config version. Please update this option in config.php
