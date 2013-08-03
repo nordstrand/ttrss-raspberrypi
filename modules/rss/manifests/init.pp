@@ -115,6 +115,8 @@ class rss {
         "$ttrss_dir/config.php":
         source  => "puppet:///modules/rss/config.php",
         require => Exec["mv ttrss"],
+        owner  => "root",
+        group  => "root",
     }
 
 
