@@ -1,9 +1,6 @@
 #Setup tt-rss with postgres backend
 class rss {
-    $db_name     = "ttrss"
-    $db_user     = "ttrss"
-    $db_password = "ttrss"
-    $ttrss_dir = "/var/www/ttrss"
+
 
     exec { "apt-update":
         command     => "/usr/bin/apt-get update",
@@ -21,18 +18,18 @@ class rss {
         },
     }
 
-    postgresql::db { $db_name:
-        user        => $db_user,
-        password    => $db_password,
+    postgresql::db { $::db_name:
+        user        => $::db_user,
+        password    => $::db_password,
         notify      => Exec["install ddl"],
     }
 
     exec { "install ddl":
-        command     => "psql --username=$db_user --host=localhost  --dbname=$db_name --file=$ttrss_dir/schema/ttrss_schema_pgsql.sql",
-        require     => [Postgresql::Db[$db_name],Exec["mv ttrss"]],
+        command     => "psql --username=$db_user --host=localhost  --dbname=$::db_name --file=$ttrss_dir/schema/ttrss_schema_pgsql.sql",
+        require     => [Postgresql::Db[$::db_name],Exec["mv ttrss"]],
         refreshonly => true,
         path        => "/usr/bin:/usr/sbin:/bin",
-        environment => "PGPASSWORD=$db_password",
+        environment => "PGPASSWORD=$::db_password",
     }
 
     package { "lighttpd" :
@@ -81,7 +78,7 @@ class rss {
     exec {
         "download ttrss":
         command     => "wget --output-document=/tmp/ttrs.tar.gz https://github.com/gothfox/Tiny-Tiny-RSS/archive/1.7.5.tar.gz",
-        unless      => "test -e $ttrss_dir",
+        unless      => "test -e $::ttrss_dir",
         path        => "/usr/bin:/usr/sbin:/bin",
         require     => Package["wget"],
     }
@@ -97,7 +94,7 @@ class rss {
         "mv ttrss":
         require     => Exec["unzip ttrss"],
         command     => "mv Tiny-Tiny-RSS-* ttrss",
-        creates     => $ttrss_dir,
+        creates     => $::ttrss_dir,
         cwd         => "/var/www",
         user        => root,
         path        => "/usr/bin:/usr/sbin:/bin";
@@ -106,13 +103,13 @@ class rss {
         command     => 'chmod -R 777 cache/images cache/export cache/js feed-icons lock',
         refreshonly => true,
         subscribe   => Exec["mv ttrss"],
-        cwd         => $ttrss_dir,
+        cwd         => $::ttrss_dir,
         user        => root,
         path        => "/usr/bin:/usr/sbin:/bin";
     }
 
     file {
-        "$ttrss_dir/config.php":
+        "$::ttrss_dir/config.php":
         source  => "puppet:///modules/rss/config.php",
         require => Exec["mv ttrss"],
     }
@@ -120,7 +117,7 @@ class rss {
 
 cron { "update feeds":
     ensure  => present,
-    command => "cd $ttrss_dir && /usr/bin/php $ttrss_dir/update.php --feeds >/dev/null 2>&1",
+    command => "cd $::ttrss_dir && /usr/bin/php $::ttrss_dir/update.php --feeds >/dev/null 2>&1",
     user    => www-data,
     minute  => 30,
     require => [Exec["mv ttrss"],Package["lighttpd"]],
