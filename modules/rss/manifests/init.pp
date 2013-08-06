@@ -137,7 +137,7 @@ class rss {
 
     cron { "make backup":
         ensure  => present,
-        command => "PGPASSWORD=$db_password pg_dump -U $db_user -h localhost $db_name > /var/ttrss-backup/ttrss-dump-`date +\%Y-\%m-\%d`.sql",
+        command => "PGPASSWORD=$db_password pg_dump -U $db_user -h localhost $db_name | gzip > /var/ttrss-backup/ttrss-dump-`date +\%Y-\%m-\%d`.sql.gz",
         user    => root,
         hour    => 1,
         minute  => 30,
